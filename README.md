@@ -5,6 +5,9 @@ A React component that renders an image input and uploads to an S3 bucket. Optio
 - ready to use an input element with preview of a image
 - resizing and compressing of an image on frontend to reduce traffic and increase speed
 
+
+## How does it look like
+
 ![Editor](https://github.com/DriveSoft/images/blob/master/react-image-upload-s3.png?raw=true)
 
 
