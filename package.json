@@ -1,5 +1,5 @@
 {
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "A react component for uploading images to AWS S3",
     "license": "MIT",
     "main": "dist/index.js",

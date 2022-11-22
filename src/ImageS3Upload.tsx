@@ -1,14 +1,17 @@
 import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react';
 import Resizer from "react-image-file-resizer";
+import deleteImage from "./delete.svg";
 import "./style.css";
 import noImage from "./noimage.svg";
-import deleteImage from "./delete.svg";
+
+//const noImage = require('./noimage.svg');
+//const deleteImage = require('./delete.svg');
 
 export interface ImageS3UploadProps {
     signingUrl: string;
     autoUpload: boolean;    
-    value: string;
-    onChange: (e: any) => void;    
+    value?: string;
+    onChange?: (e: any) => void;    
     emptyPhoto?: string; 
     serverPhoto?: string; 
     buttonCaption?: string;
@@ -29,7 +32,7 @@ export interface ImageS3UploadProps {
     onStart?: () => void;
     onUploaded?: () => void;
     onProgress?: (percent: number) => void;
-    onFinish?: (isSuccessful: boolean) => void;
+    onFinish?: (isSuccessful: boolean, urlImage: string) => void;
     onError?: (msg: string) => void;
     onSignedUrl?: (data: any)  => void;
     onResizeStart?: () => void;
@@ -94,7 +97,7 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
     const [showSpinner, setShowSpinner] = useState<boolean>(false);    
     const [s3DataState, setS3DataState] = useState<any>(undefined);
     const [notLoad, setNotLoad] = useState(false); // to prevent loading photo from S3 when we have this photo in blob input element
-   
+    const [filenameValue, setFilenameValue] = useState('');
 
     // to be able to call method uploadFile
     useImperativeHandle(ref, () => ({
@@ -169,18 +172,18 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
             setButtonCaptionState('Done');
             setShowSpinner(false); 
             if (onUploaded) onUploaded();   
-            if (onFinish) onFinish(true);
+            if (onFinish) onFinish(true, filenameValue);
         }
 
         if (onFinish && status.state === stateComponent.finish) {
-             onFinish(true);
+             onFinish(true, filenameValue);
         }  
         
         if (status.state === stateComponent.error) {
             setButtonCaptionState("Error");
             setShowSpinner(false);
             onError && onError(status.msg);
-            if (onFinish) onFinish(false);
+            if (onFinish) onFinish(false, filenameValue);
         }          
         
     }, [status]);
@@ -215,6 +218,7 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
         }
                
         setNotLoad(false);
+        value && setFilenameValue(value);
         
     }, [value]);   
     
@@ -229,7 +233,8 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
             }
           };
 
-          onChange(event);         
+          setFilenameValue(value);
+          onChange && onChange(event);         
     }
     const resizeFile = (file: any) =>
 		new Promise((resolve) => {
