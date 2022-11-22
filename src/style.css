@@ -1,0 +1,56 @@
+#imageS3Upload {
+    width: 100%;
+    height: auto; 
+    border-radius: 5px;
+}
+
+#imageDeleteIconS3Upload {
+    width: 46px; 
+    height: 46px; 
+    position: absolute; 
+    top: -9px; 
+    right: -8px;
+}
+
+.imageS3UploadContainer .button{
+    background-color: #fff;
+    color: gray;    
+    font-size: 1rem;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    padding: 9px 10px;
+    margin-top: 15px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    display: inline-block;
+    width: 100%;
+    transition-duration: 0.4s;
+}
+
+.imageS3UploadContainer .button:hover{
+    background-color: gray;
+    color: #fff; 
+}
+
+
+
+@keyframes spinner {
+    to {transform: rotate(360deg);}
+  }
+   
+  .imageS3UploadContainer .spinner:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    border-top-color: #000;
+    animation: spinner .6s linear infinite;
+  }
