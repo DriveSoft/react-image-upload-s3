@@ -23,7 +23,7 @@ function App() {
 	const URL_GENERATE_S3_URLKEY = 'https://example.com/s3/generate_signed_url/';
 	const SERVER_PHOTO = 'https://example.s3.eu-central-1.amazonaws.com/';	
 
-  	const resizerOptions = {
+	const resizerOptions = {
 		enabled: true,
 		autoResize: true, // otherwise resizing will be preform before uploading, the parametr doesn't make sense if autoUpload = True
 		maxWidth: 1280,
@@ -31,34 +31,34 @@ function App() {
 		compressFormat: "JPEG",
 		quality: 70,
 		rotation: 0            
-  	};
-  
-	const refS3Uploader = useRef(); // to be able to call a method uploadFile
-  	const [comment, setComment1] = useState('');	
-	const [imageS3URL, setImageS3URL] = useState('');
-	
-  	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
-  	const [submitData, setSubmitData] = useState(false);  
+	};
 
-  	useEffect(()=> {
-    	setSubmitData(false);
-      	submitData && submitingData();
-  	}, [submitData]);
+	const refS3Uploader = useRef(); // to be able to call a method uploadFile
+	const [comment, setComment1] = useState('');	
+	const [imageS3URL, setImageS3URL] = useState('');
+
+	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+	const [submitData, setSubmitData] = useState(false);  
+
+	useEffect(()=> {
+		setSubmitData(false);
+		submitData && submitingData();
+	}, [submitData]);
 
 	const onSubmit = async (e: any) => {
 		e.preventDefault();		
-    	setSubmitButtonDisabled(true);
-    	//@ts-ignore
+		setSubmitButtonDisabled(true);
+		//@ts-ignore
 		const isSuccess = await refS3Uploader.current.uploadFile(); 
-    	setSubmitButtonDisabled(false);       
-    	isSuccess && setSubmitData(true);
+		setSubmitButtonDisabled(false);       
+		isSuccess && setSubmitData(true);
 	}
 
 	const submitingData = () => {			
 		const dataToSend = {
 			comment,
-		 	imageS3URL	
-	  	}     
+			imageS3URL	
+		}     
 	}
 
 	const onResizeStart = () => {
