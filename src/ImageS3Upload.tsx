@@ -4,9 +4,6 @@ import deleteImage from "./delete.svg";
 import "./style.css";
 import noImage from "./noimage.svg";
 
-//const noImage = require('./noimage.svg');
-//const deleteImage = require('./delete.svg');
-
 export interface ImageS3UploadProps {
     signingUrl: string;
     autoUpload: boolean;    
@@ -42,7 +39,6 @@ export interface ImageS3UploadProps {
 interface RefObject {
     uploadFile: () => Promise<boolean>
 }
-
 
 enum stateComponent {
     none,    
