@@ -179,7 +179,7 @@ function App() {
 export default App;
 ```
 
-## Example 2
+## Example 3
 
 autoUpload=True
 
@@ -274,7 +274,7 @@ function App() {
 export default App;
 ```
 
-## Example 3
+## Example 4
 
 Multiple components in one form
 autoUpload=False
@@ -459,7 +459,7 @@ function App() {
 export default App;
 ```
 
-## Example 4
+## Example 5
 
 Multiple components in one form
 autoUpload=True
