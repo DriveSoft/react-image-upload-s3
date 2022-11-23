@@ -654,15 +654,19 @@ export default App;
 | `onError`         | (msg: string) => void                                                                                                                                                  | `function` | No       |
 
 
+
 ## Resizer options
 
 | Option            | Description                                                                                                                                                            | Type       | Required |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | -------- |
+| `enabled`         | Whether the resizer is enabled or disabled.                                                                                                                            | `boolean`  | Yes      |
+| `autoResize`      | Start the process of resizing immediately after selecting the file, otherwise resizing will be preform before uploading, the parametr doesn't make sense if autoUpload = True       | `boolean`  | Yes      |
 | `maxWidth`        | New image max width (ratio is preserved)                                                                                                                               | `number`   | Yes      |
 | `maxHeight`       | New image max height (ratio is preserved)                                                                                                                              | `number`   | Yes      |
 | `compressFormat`  | Can be either **JPEG**, **PNG** or **WEBP**.                                                                                                                           | `string`   | Yes      |
 | `quality`         | A number between 0 and 100. Used for the JPEG compression.(if no compress is needed, just set it to 100)                                                               | `number`   | Yes      |
 | `rotation`        | Degree of clockwise rotation to apply to the image. Rotation is limited to multiples of 90 degrees.(if no rotation is needed, just set it to 0) (0, 90, 180, 270, 360) | `number`   | Yes      |
+
 
 
 ## License
