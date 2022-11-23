@@ -1,5 +1,5 @@
 {
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "A React component that renders an image input and uploads to an S3 bucket. Optionally can perform resizing and compressing of the image.",
     "license": "MIT",
     "main": "dist/index.js",
@@ -28,6 +28,28 @@
             "pre-commit": "tsdx lint"
         }
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DriveSoft/react-image-upload-s3.git"
+      },
+      "homepage": "https://github.com/DriveSoft/react-image-upload-s3",
+      "keywords": [
+        "react",
+        "upload",
+        "s3",
+        "aws",
+        "amazon",
+        "image",
+        "photo",
+        "resize",
+        "resizer",
+        "compress",
+        "rotate",
+        "scaling",
+        "scale",
+        "image-resizer",
+        "react-component"
+      ],    
     "prettier": {
         "printWidth": 80,
         "semi": true,
