@@ -643,6 +643,7 @@ export default App;
 | `showSize`        | Wether to show file size after resizing on the button. The default value is True                                                                                       | `boolean`  | No       |
 | `value`           | Value of component (file name)                                                                                                                                         | `string`   | No       |
 | `resizer`         | See Resizer options section.                                                                                                                                           | `object`   | No       |
+| `uploadFile`      | Method to start uploading: () => Promise<boolean>                                                                                                                      | `method`   |          |
 | `onStart`         | () => void                                                                                                                                                             | `function` | No       |
 | `onFinish`        | (isSuccessful: boolean, urlImage: string) => void                                                                                                                      | `function` | No       |
 | `onUploaded`      | () => void                                                                                                                                                             | `function` | No       |
