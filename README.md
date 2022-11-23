@@ -24,9 +24,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ImageS3Upload } from 'react-image-upload-s3';
 
 function App() {
-  const URL_GENERATE_S3_URLKEY =
-    'http://127.0.0.1:8000/api/citytree/s3/generate_signed_url/';
-  const SERVER_PHOTO = 'https://urbangis.s3.eu-central-1.amazonaws.com/';
+  const URL_GENERATE_S3_URLKEY = 'https://yourserver.com/s3/sign/';
+  const SERVER_PHOTO = 'https://example.amazonaws.com/';
 
   const resizerOptions = {
     enabled: true,
@@ -78,9 +77,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ImageS3Upload } from 'react-image-upload-s3';
 
 function App() {
-  const URL_GENERATE_S3_URLKEY =
-    'http://127.0.0.1:8000/api/citytree/s3/generate_signed_url/';
-  const SERVER_PHOTO = 'https://urbangis.s3.eu-central-1.amazonaws.com/';
+  const URL_GENERATE_S3_URLKEY = 'https://yourserver.com/s3/sign/';
+  const SERVER_PHOTO = 'https://example.amazonaws.com/';
 
   const resizerOptions = {
     enabled: true,
@@ -190,9 +188,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ImageS3Upload } from 'react-image-upload-s3';
 
 function App() {
-  const URL_GENERATE_S3_URLKEY =
-    'http://127.0.0.1:8000/api/citytree/s3/generate_signed_url/';
-  const SERVER_PHOTO = 'https://urbangis.s3.eu-central-1.amazonaws.com/';
+  const URL_GENERATE_S3_URLKEY = 'https://yourserver.com/s3/sign/';
+  const SERVER_PHOTO = 'https://example.amazonaws.com/';
 
   const resizerOptions = {
     enabled: true,
@@ -287,9 +284,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ImageS3Upload } from 'react-image-upload-s3';
 
 function App() {
-  const URL_GENERATE_S3_URLKEY =
-    'http://127.0.0.1:8000/api/citytree/s3/generate_signed_url/';
-  const SERVER_PHOTO = 'https://urbangis.s3.eu-central-1.amazonaws.com/';
+  const URL_GENERATE_S3_URLKEY = 'https://yourserver.com/s3/sign/';
+  const SERVER_PHOTO = 'https://example.amazonaws.com/';
 
   const resizerOptions = {
     enabled: true,
@@ -473,8 +469,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ImageS3Upload } from 'react-image-upload-s3';
 
 function App() {
-  const URL_GENERATE_S3_URLKEY = 'http://127.0.0.1:8000/api/citytree/s3/generate_signed_url/';
-  const SERVER_PHOTO = 'https://urbangis.s3.eu-central-1.amazonaws.com/';
+  const URL_GENERATE_S3_URLKEY = 'https://yourserver.com/s3/sign/';
+  const SERVER_PHOTO = 'https://example.amazonaws.com/';
 
   const resizerOptions = {
     enabled: true,
@@ -485,10 +481,6 @@ function App() {
     quality: 70,
     rotation: 0,
   };
-
-  const refS3Uploader1 = useRef(); // to be able to call method uploadFile
-  const refS3Uploader2 = useRef(); // to be able to call method uploadFile
-  const refS3Uploader3 = useRef(); // to be able to call method uploadFile
 
   const [uploadStatus, setUploadStatus] = useState({
     image1: true,
@@ -574,7 +566,6 @@ function App() {
               onStart={onStart1}
               onFinish={onFinish1}
               resizer={resizerOptions}
-              ref={refS3Uploader1}
               value={imageS3URL1}
               onChange={e => setImageS3URL1(e.target.value)}
             />
@@ -597,7 +588,6 @@ function App() {
               onStart={onStart2}
               onFinish={onFinish2}
               resizer={resizerOptions}
-              ref={refS3Uploader2}
               value={imageS3URL2}
               onChange={e => setImageS3URL2(e.target.value)}
             />
@@ -620,7 +610,6 @@ function App() {
               onStart={onStart3}
               onFinish={onFinish3}
               resizer={resizerOptions}
-              ref={refS3Uploader3}
               value={imageS3URL3}
               onChange={e => setImageS3URL3(e.target.value)}
             />
@@ -641,6 +630,29 @@ function App() {
 export default App;
 ```
 
+
+## Options
+
+| Option            | Description                                                                                                                                                            | Type       | Required |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | -------- |
+| `signingUrl`      | To receive a presigned URL.                                                                                                                                            | `string`   | Yes      |
+| `autoUpload`      | Whether an image will be upload immediately, otherwise you should call a method refImageS3Upload.current.uploadFile() to start uploading.                              | `boolean`  | Yes      |
+| `serverPhoto`     | S3 storage Service endpoints. For example: https://bucket_name.s3.us-east-2.amazonaws.com/                                                                             | `string`   | No       |
+| `emptyPhoto`      | You can change a default empty background.                                                                                                                             | `string`   | No       |
+| `buttonCaption`   | You can change caption on the button. The default value is 'Browse...'                                                                                                 | `string`   | No       |
+| `showSize`        | Wether to show file size after resizing on the button. The default value is True                                                                                       | `boolean`  | No       |
+| `value`           | Value of component (file name)                                                                                                                                         | `string`   | No       |
+| `resizer`         | See Resizer options section.                                                                                                                                           | `object`   | No       |
+| `onStart`         | () => void                                                                                                                                                             | `function` | No       |
+| `onFinish`        | (isSuccessful: boolean, urlImage: string) => void                                                                                                                      | `function` | No       |
+| `onUploaded`      | () => void                                                                                                                                                             | `function` | No       |
+| `onProgress`      | (percent: number) => void                                                                                                                                              | `function` | No       |
+| `onResizeStart`   | () => void                                                                                                                                                             | `function` | No       |
+| `onResizeFinish`  | () => void                                                                                                                                                             | `function` | No       |
+| `onSignedUrl`     | (data: any)  => void                                                                                                                                                   | `function` | No       |
+| `onError`         | (msg: string) => void                                                                                                                                                  | `function` | No       |
+
+
 ## Resizer options
 
 | Option            | Description                                                                                                                                                            | Type       | Required |
@@ -650,7 +662,6 @@ export default App;
 | `compressFormat`  | Can be either **JPEG**, **PNG** or **WEBP**.                                                                                                                           | `string`   | Yes      |
 | `quality`         | A number between 0 and 100. Used for the JPEG compression.(if no compress is needed, just set it to 100)                                                               | `number`   | Yes      |
 | `rotation`        | Degree of clockwise rotation to apply to the image. Rotation is limited to multiples of 90 degrees.(if no rotation is needed, just set it to 0) (0, 90, 180, 270, 360) | `number`   | Yes      |
-
 
 
 ## License
