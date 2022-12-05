@@ -1,5 +1,6 @@
 import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react';
 import Resizer from "react-image-file-resizer";
+import { fetchUrlSign } from "./utils";
 import deleteImage from "./delete.svg";
 import "./style.css";
 import noImage from "./noimage.svg";
@@ -84,11 +85,11 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
 }, ref) => {
 
 
-    const inputFileEl = useRef(null);
+    const inputFileEl = useRef<HTMLInputElement>(null);
     
     const [status, setStatus] = useState<{state: stateComponent, msg: string, intValue?: number}>({state: stateComponent.none, msg: ''});
     const [imagePhoto, setImagePhoto] = useState<string | undefined>(undefined);
-    const [compressedPhoto, setCompressedPhoto] = useState<any>(undefined);
+    const [compressedPhoto, setCompressedPhoto] = useState<Blob | undefined>(undefined);
     const [buttonCaptionState, setButtonCaptionState] = useState(buttonCaption);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);    
     const [s3DataState, setS3DataState] = useState<any>(undefined);
@@ -109,7 +110,7 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
                     !autoUpload && onStart && onStart();
                     
                     //@ts-ignore
-                    const p = await startUpload(inputFileEl?.current?.files[0].name, inputFileEl?.current?.files[0]);                                       
+                    const p = await startUpload(inputFileEl?.current?.files[0].name, inputFileEl?.current?.files[0] as Blob);                                       
                     if (p) {
                         return true;
                     } else {
@@ -232,7 +233,8 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
           setFilenameValue(value);
           onChange && onChange(event);         
     }
-    const resizeFile = (file: any) =>
+
+    const resizeFile = (file: Blob): Promise<Blob> => 
 		new Promise((resolve) => {
 			Resizer.imageFileResizer(
 				file,
@@ -242,19 +244,17 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
 				resizer.quality,
 				resizer.rotation,
 				(uri) => {
-					resolve(uri);
+					if (uri instanceof Blob) resolve(uri);
 				},
 				"blob"
 			);
 		});
 
-
-    const onChangeFile = async (event: any) => {
-        
+    const onChangeFile = async (event: React.ChangeEvent<HTMLInputElement>) => {        
         if (event.target.files && event.target.files.length > 0) {
             autoUpload && onStart && onStart();
             setStatus({state: stateComponent.none, msg: ''});
-            const file = event.target.files[0];
+            const file = event.target.files[0];            
             setImagePhoto(URL.createObjectURL(file)); 
             
             if (resizer.enabled && resizer.autoResize) {                                
@@ -292,33 +292,33 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
         }                
     };
 
-	const fetchUrlSign = async (fileName: string) => {			
-		let myHeaders = new Headers();
-		myHeaders.append("Content-type", "application/json");  
-        const bodyObject = {objectName: fileName};
+	// const fetchUrlSign = async (fileName: string) => {			
+	// 	let myHeaders = new Headers();
+	// 	myHeaders.append("Content-type", "application/json");  
+    //     const bodyObject = {objectName: fileName};
         
-        let res = await fetch(signingUrl, {
-            method: 'POST',
-            headers: myHeaders,
-            body: JSON.stringify(bodyObject)
-        });
+    //     let res = await fetch(signingUrl, {
+    //         method: 'POST',
+    //         headers: myHeaders,
+    //         body: JSON.stringify(bodyObject)
+    //     });
         
-        if (!res.ok) {
-            throw new Error(`${res.status} ${res.statusText}`);
-        }
+    //     if (!res.ok) {
+    //         throw new Error(`${res.status} ${res.statusText}`);
+    //     }
 
-        const json = await res.json();
-        return JSON.parse(json);		
-	}
+    //     const json = await res.json();
+    //     return JSON.parse(json);		
+	// }
 
-    const updateProgress = (ev: any) => {
+    const updateProgress = (ev: ProgressEvent<EventTarget>) => {        
         if (ev.lengthComputable) {
             let percentComplete = Math.round((ev.loaded / ev.total) * 100);            
             setStatus({state: stateComponent.uploading, msg: String(percentComplete)+'%', intValue: percentComplete})
         }
     } 
 
-    const uploadFile = (file: any, s3Data: any) => {
+    const uploadFile = (file: Blob, s3Data: any) => {
         return new Promise((resolve, reject) => {
             let xhr = new XMLHttpRequest();
             xhr.open("POST", s3Data.url);
@@ -332,7 +332,7 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
                     //console.log('append', key, s3Data.fields[key]);
                 }                    
             }
-            postData.append("file", file); // blob
+            postData.append("file", file);
     
             xhr.onload = () => {
                 // transaction completes successfully.
@@ -345,7 +345,7 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
                 setShowSpinner(false);
                 setButtonCaptionState('Error');                        
                 setStatus({state: stateComponent.error, msg: String(e.target.status)});                                                                            
-                alert(`Error during file upload (status: ${e.target.statusText}): ${file.name}`);
+                alert(`Error during file upload (status: ${e.target.statusText})`);
             };  
     
             xhr.ontimeout = () => {
@@ -353,21 +353,18 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
                 setShowSpinner(false);
                 setButtonCaptionState('Error');                        
                 setStatus({state: stateComponent.error, msg: 'Time out'});                                                                            
-                alert(`Error during file upload (status: Time out): ${file.name}`);   
+                alert(`Error during file upload (status: Time out)`);   
             }
                       
             xhr.send(postData);
         });
-
-
     }
 
 
 
-    const resizerFunc = async (file: any = undefined): Promise<any> => {
+    const resizerFunc = async (file: Blob): Promise<Blob | undefined> => {
         if (resizer.enabled && resizer.autoResize) {
-            console.log('autoResize', compressedPhoto)
-                
+                        
             if (compressedPhoto) { // if autoUpload = False, it's mean that resized photo in state
                 return compressedPhoto;
             }
@@ -379,7 +376,6 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
             setStatus({state: stateComponent.error, msg: ''});
             return undefined;                
         }
-
 
         if (resizer.enabled && !resizer.autoResize) {
             try {                
@@ -401,34 +397,30 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
                             
         }
 
-
         if (!resizer.enabled) {
             return file; 
         }
+
+        return undefined;
     }
 
 
-    const startUpload = async (filename: string, file: any = undefined) => {        
+    const startUpload = async (filename: string, file: Blob) => {        
         try {
             filename = filename.replace(/\s/g, ''); // remove spaces, because there is some problem with restAPI, which return url filename with %20 instead space, after that when we savind data again, %20 will be convert to %2520 (% = %25)
 
             setStatus({state: stateComponent.startingUpload, msg: ''});
             setS3DataState(undefined);
 
-            //console.log('filename', filename);
-            const signedUrl = await fetchUrlSign(filename);            
+            const signedUrl = await fetchUrlSign(signingUrl, filename);            
             setS3DataState(signedUrl);  
             if (onSignedUrl) {
                 onSignedUrl(signedUrl);
             }
-            
-            //console.log('signedUrl', signedUrl);
-            
 
             const fileForUpload = await resizerFunc(file);
             if (fileForUpload) {
-                //@ts-ignore
-                await uploadFile(file, signedUrl);  
+                await uploadFile(fileForUpload, signedUrl);  
                 return true; 
             }
 
@@ -479,14 +471,13 @@ export const ImageS3Upload = forwardRef<RefObject | undefined, ImageS3UploadProp
                     //@ts-ignore                        
                     inputFileEl.current.click();
                 }}
+                data-testid='browseButton'
             >
                 {buttonCaptionState}
                 
             </button>{' '}
                                     
-            <input ref={inputFileEl} type="file" accept="image/*" style={{display: "none"}} 
-                onChange={onChangeFile}
-            />                    
+            <input ref={inputFileEl} type="file" accept="image/*" style={{display: "none"}} onChange={onChangeFile} data-testid='inputFile'/>                    
         </div>
     );
 
